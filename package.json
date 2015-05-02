@@ -1,0 +1,22 @@
+{
+  "name": "whisky-logger",
+  "version": "1.0.0",
+  "description": "###The purpose of this mobile-first web application is to allow users to rate the whiskies they have tasted while providing a platform for discovering new whiskies rated by other members.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TravisLibby/whisky-logger.git"
+  },
+  "author": "Travis Libby <travislibby@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TravisLibby/whisky-logger/issues"
+  },
+  "homepage": "https://github.com/TravisLibby/whisky-logger",
+  "dependencies": {
+    "express": "^4.12.3"
+  }
+}
