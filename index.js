@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var app = express();
 
@@ -12,17 +13,18 @@ app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-
 app.use(bodyParser.json()); // parse application/json
 
 // POST - create a user
-app.post('/api/user', function(req, res) {
-  User.create(req.body, function(err) {
+app.post('/api/user', function (req, res) {
+  console.log(req.body);
+  User.create(req.body, function (err, user) {
     if (err) {
-      if (err.code = 11000) {
+      if (err.code === 11000) {
         return res.sendStatus(409); // conflict
+      } else {
+        return res.sendStatus(500); // server error
       }
-    } else {
-      return res.sendStatus(500); // server error
     }
     res.sendStatus(200); // ok - user created
-  });
+  });  
 });
 
 app.listen(3000);
