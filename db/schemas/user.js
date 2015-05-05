@@ -19,4 +19,11 @@ var userSchema = new Schema({
   }
 });
 
+userSchema.methods.toClient = function() {
+  return {
+    id: this.id,
+    username: this.username
+  };
+}
+
 module.exports = userSchema;

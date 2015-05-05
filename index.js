@@ -32,7 +32,7 @@ app.get('/api/users/:userId', function (req, res) {
     if (err) {
       return res.sendStatus(500);
     }
-    res.send({user: user});
+    res.send({user: user.toClient()});
   });
 });
 
