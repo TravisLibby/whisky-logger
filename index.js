@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-
 app.use(bodyParser.json()); // parse application/json
 
 // POST - create a user
-app.post('/api/user', function (req, res) {
+app.post('/api/users', function (req, res) {
   console.log(req.body);
   User.create(req.body, function (err, user) {
     if (err) {
@@ -24,6 +24,16 @@ app.post('/api/user', function (req, res) {
     }
     res.sendStatus(200); // ok - user created
   });  
+});
+
+// GET - find a user
+app.get('/api/users/:userId', function (req, res) {
+  User.findById(req.params.userId, function (err, user) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.send({user: user});
+  });
 });
 
 app.listen(3000);
