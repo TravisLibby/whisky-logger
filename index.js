@@ -29,12 +29,26 @@ app.post('/api/users', function (req, res) {
 // GET - find a user
 app.get('/api/users/:userId', function (req, res) {
   User.findById(req.params.userId, function (err, user) {
+    if (!user) {
+      return res.sendStatus(404); // No user found
+    }
     if (err) {
       return res.sendStatus(500);
     }
     res.send({user: user.toClient()});
   });
 });
+
+// PUT - update user password
+app.put('/api/users/:userId', function(req, res) {
+  var newPassword = req.body.password;
+  User.findByIdAndUpdate(req.params.userId, {password: newPassword}, function(err, user) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.sendStatus(200);
+  });
+})
 
 app.listen(3000);
 console.log('Listening...');
