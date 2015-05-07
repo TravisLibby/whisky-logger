@@ -1,6 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
+var passport = require('./auth');
+
+// initiate the app
 var app = express();
 
 // db connection and models
@@ -10,6 +15,16 @@ var User = conn.model('User');
 // middleware
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
+app.use(cookieParser());
+app.use(session({
+  secret: 'scotchyscotch',
+  resave: false,
+  saveUninitialized: true
+}));
+
+// passport setup
+app.use(passport.initialize());
+app.use(passport.session());
 
 // POST - create a user
 app.post('/api/users', function (req, res) {
@@ -24,6 +39,22 @@ app.post('/api/users', function (req, res) {
     }
     res.sendStatus(200); // ok - user created
   });  
+});
+
+// POST - user login
+app.post('/api/auth/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { 
+      res.sendStatus(500);
+    }
+    if (!user) { 
+      return res.sendStatus(403);
+    }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return res.send({user: user.toClient()});
+    });
+  })(req, res, next);
 });
 
 // GET - find a user
