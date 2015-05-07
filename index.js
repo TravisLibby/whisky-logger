@@ -37,7 +37,13 @@ app.post('/api/users', function (req, res) {
         return res.sendStatus(500); // server error
       }
     }
-    res.sendStatus(200); // ok - user created
+    // establish a session for the user
+    req.login(user, function(err) {
+      if (err) {
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200); // ok - user created and session established
+    });
   });  
 });
 
