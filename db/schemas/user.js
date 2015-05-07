@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var bcrypt = require('bcrypt');
 
 var userSchema = new Schema({
   name: {
@@ -17,6 +18,17 @@ var userSchema = new Schema({
   password: {
     type: String
   }
+});
+
+userSchema.pre('save', function(next) {
+  var self = this;
+  bcrypt.hash(this.password, 10, function(err, hash) {
+    if (err) {
+      return next(err);
+    }
+    self.password = hash;
+    next();
+  });
 });
 
 userSchema.methods.toClient = function() {
