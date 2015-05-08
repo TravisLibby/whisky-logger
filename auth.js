@@ -1,5 +1,6 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var bcrypt = require('bcrypt');
 
 // db connection and models
 var conn = require('./db');
@@ -12,10 +13,18 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (user.password !== password) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
+      // use bcrypt to compare hash to entered password
+      bcrypt.compare(password, user.password, function(err, isMatch) {
+        console.log('password: ', password);
+        console.log('username: ', user.username);
+        if (err) {
+          return res.sendStatus(500);
+        }
+        if (!isMatch) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      });
     });
   }
 ));
