@@ -15,8 +15,6 @@ passport.use(new LocalStrategy(
       }
       // use bcrypt to compare hash to entered password
       bcrypt.compare(password, user.password, function(err, isMatch) {
-        console.log('password: ', password);
-        console.log('username: ', user.username);
         if (err) {
           return res.sendStatus(500);
         }
