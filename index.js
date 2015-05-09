@@ -76,7 +76,7 @@ app.post('/api/auth/login', function(req, res, next) {
   })(req, res, next);
 });
 
-// GET - find a user
+// GET - find a user by id
 app.get('/api/users/:userId', ensureAuthentication, function (req, res) {
   User.findById(req.params.userId, function (err, user) {
     if (!user) {
@@ -126,6 +126,19 @@ app.post('/api/whiskies', ensureAuthentication, function(req, res) {
     }
     res.sendStatus(200);
   })
+});
+
+// GET - find a whisky by id
+app.get('/api/whiskies/:whiskyId', ensureAuthentication, function(req, res) {
+  Whisky.findById(req.params.whiskyId, function(err, whisky) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    if (!whisky) {
+      return res.sendStatus(404);
+    }
+    res.send(whisky.toClient());
+  });
 });
 
 app.listen(3000);
