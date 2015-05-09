@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var bcrypt = require('bcrypt');
 
 var passport = require('./auth');
 
@@ -26,9 +27,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// ensure authentication middleware
+function ensureAuthentication(req, res, next) {
+  if (!req.isAuthenticated()) {
+    res.sendStatus(403); // not authenticated
+  }
+  next(); 
+}
+
 // POST - create a user
 app.post('/api/users', function (req, res) {
-  console.log(req.body);
   User.create(req.body, function (err, user) {
     if (err) {
       if (err.code === 11000) {
@@ -77,13 +85,25 @@ app.get('/api/users/:userId', function (req, res) {
 });
 
 // PUT - update user password
-app.put('/api/users/:userId', function(req, res) {
+app.put('/api/users/:userId', ensureAuthentication, function(req, res) {
   var newPassword = req.body.password;
-  User.findByIdAndUpdate(req.params.userId, {password: newPassword}, function(err, user) {
+  var userId = req.params.userId;
+  // Make sure this is the right user
+  if (req.user.id !== userId) {
+    return res.sendStatus(403);
+  }
+  // encrypt new password TODO - move this encryption to the userSchema
+  bcrypt.hash(newPassword, 10, function(err, hash) {
+    if (err) {
+      res.sendStatus(500);
+    }
+    newPassword = hash;
+    User.findByIdAndUpdate(userId, {password: newPassword}, function(err, user) {
     if (err) {
       return res.sendStatus(500);
     }
     res.sendStatus(200);
+    });
   });
 })
 
