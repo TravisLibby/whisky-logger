@@ -4,8 +4,10 @@ var connection = mongoose.createConnection('mongodb://admin:scotchyscotch@ds0319
 
 // models
 var userSchema = require('./schemas/user');
+var whiskySchema = require('./schemas/whisky');
 
-// define models on the connection object
+// set models on the connection object
 connection.model('User', userSchema);
+connection.model('Whisky', whiskySchema);
 
 module.exports = connection;

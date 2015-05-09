@@ -12,6 +12,7 @@ var app = express();
 // db connection and models
 var conn = require('./db');
 var User = conn.model('User');
+var Whisky = conn.model('Whisky');
 
 // middleware
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
@@ -34,6 +35,10 @@ function ensureAuthentication(req, res, next) {
   }
   next(); 
 }
+
+/*
+// USER ROUTES
+*/
 
 // POST - create a user
 app.post('/api/users', function (req, res) {
@@ -72,7 +77,7 @@ app.post('/api/auth/login', function(req, res, next) {
 });
 
 // GET - find a user
-app.get('/api/users/:userId', function (req, res) {
+app.get('/api/users/:userId', ensureAuthentication, function (req, res) {
   User.findById(req.params.userId, function (err, user) {
     if (!user) {
       return res.sendStatus(404); // No user found
@@ -105,7 +110,11 @@ app.put('/api/users/:userId', ensureAuthentication, function(req, res) {
     res.sendStatus(200);
     });
   });
-})
+});
+
+/*
+// WHISKY ROUTES
+*/
 
 app.listen(3000);
 console.log('Listening...');
