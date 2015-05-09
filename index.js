@@ -31,7 +31,7 @@ app.use(passport.session());
 // ensure authentication middleware
 function ensureAuthentication(req, res, next) {
   if (!req.isAuthenticated()) {
-    res.sendStatus(403); // not authenticated
+    return res.sendStatus(403); // Forbidden, not authenticated
   }
   next(); 
 }
@@ -115,6 +115,18 @@ app.put('/api/users/:userId', ensureAuthentication, function(req, res) {
 /*
 // WHISKY ROUTES
 */
+
+// POST - create a whisky review
+app.post('/api/whiskies', ensureAuthentication, function(req, res) {
+  req.body.whiskyId = req.user.id;
+  Whisky.create(req.body, function(err) {
+    console.log(req.body);
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.sendStatus(200);
+  })
+});
 
 app.listen(3000);
 console.log('Listening...');
