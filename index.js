@@ -36,21 +36,21 @@ function ensureAuthentication(req, res, next) {
   next(); 
 }
 
-// // delete authorization middleware
-// function isAuthorizedToDelete(req, res, next) {
-//   Whisky.findById(req.params.id, function(err, whisky) {
-//     if (err) {
-//       return res.sendStatus(500);
-//     }
-//     if (!whisky) {
-//       return res.sendStatus(404);
-//     }
-//     if (whisky.whiskyId !== req.user.id) {
-//       return res.sendStatus(403);
-//     }
-//     next();
-//   });
-// };
+// delete authorization middleware
+function isAuthorizedToDelete(req, res, next) {
+  Whisky.findById(req.params.id, function(err, whisky) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    if (!whisky) {
+      return res.sendStatus(404);
+    }
+    if (whisky.whiskyId !== req.user.id) {
+      return res.sendStatus(403);
+    }
+    next();
+  });
+};
 
 /*
 // USER ROUTES
@@ -173,15 +173,15 @@ app.get('/api/whiskies', ensureAuthentication, function(req, res) {
   });
 });
 
-// // DELETE - delete a user's whisky
-// app.delete('/api/whiskies/:id', ensureAuthentication, isAuthorizedToDelete, function(req, res) {
-//   Whisky.findByIdAndRemove(req.params.id, function(err, whisky) {
-//     if (err) {
-//       return res.sendStatus(500);
-//     }
-//     res.sendStatus(200);
-//   });
-// });
+// DELETE - delete a user's whisky
+app.delete('/api/whiskies/:id', ensureAuthentication, isAuthorizedToDelete, function(req, res) {
+  Whisky.findByIdAndRemove(req.params.id, function(err, whisky) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.sendStatus(200);
+  });
+});
 
 app.listen(3000);
 console.log('Listening...');
