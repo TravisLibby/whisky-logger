@@ -141,5 +141,15 @@ app.get('/api/whiskies/:whiskyId', ensureAuthentication, function(req, res) {
   });
 });
 
+// GET - all of a user's whiskies
+app.get('/api/whiskies', ensureAuthentication, function(req, res) {
+  Whisky.find({whiskyId: req.user.id}, function(err, whiskies) {
+    if (err) {
+      return res.sendStatus(500);
+    }
+    res.send(whiskies);
+  });
+});
+
 app.listen(3000);
 console.log('Listening...');
