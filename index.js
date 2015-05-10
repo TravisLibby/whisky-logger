@@ -112,6 +112,12 @@ app.put('/api/users/:userId', ensureAuthentication, function(req, res) {
   });
 });
 
+// GET - logout
+app.get('/api/auth/logout', ensureAuthentication, function(req, res) {
+  req.logout();
+  res.sendStatus(200);
+});
+
 /*
 // WHISKY ROUTES
 */
