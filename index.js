@@ -142,7 +142,6 @@ app.get('/api/auth/logout', ensureAuthentication, function(req, res) {
 app.post('/api/whiskies', ensureAuthentication, function(req, res) {
   req.body.whiskyId = req.user.id;
   Whisky.create(req.body, function(err) {
-    console.log(req.body);
     if (err) {
       return res.sendStatus(500);
     }
