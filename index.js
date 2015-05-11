@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bcrypt = require('bcrypt');
+var _ = require('lodash');
 
 var passport = require('./auth');
 
@@ -167,6 +168,10 @@ app.get('/api/whiskies', ensureAuthentication, function(req, res) {
   Whisky.find({whiskyId: req.user.id}, function(err, whiskies) {
     if (err) {
       return res.sendStatus(500);
+    }
+    // TODO - find a cleaner way to do this
+    for (var i = 0; i < whiskies.length; i++) {
+      whiskies[i] = whiskies[i].toClient();
     }
     res.send(whiskies);
   });
