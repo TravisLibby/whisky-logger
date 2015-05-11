@@ -53,6 +53,9 @@ function isAuthorizedToDelete(req, res, next) {
   });
 };
 
+// routes
+require('./router')(app);
+
 // POST - user login
 app.post('/api/auth/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {

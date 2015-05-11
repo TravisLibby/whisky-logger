@@ -1,9 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var bcrypt = require('bcrypt');
 
+var conn = require('../../db');
+var User = conn.model('User');
+
+var ensureAuthentication = require('../../middleware/ensureAuthentication');
 
 // POST - create a user
-router.post('/api/users', function (req, res) {
+router.post('/', function (req, res) {
   User.create(req.body, function (err, user) {
     if (err) {
       if (err.code === 11000) {
@@ -23,7 +28,7 @@ router.post('/api/users', function (req, res) {
 });
 
 // GET - find a user by id
-app.get('/api/users/:userId', ensureAuthentication, function (req, res) {
+router.get('/:userId', ensureAuthentication, function (req, res) {
   User.findById(req.params.userId, function (err, user) {
     if (!user) {
       return res.sendStatus(404); // No user found
@@ -36,7 +41,7 @@ app.get('/api/users/:userId', ensureAuthentication, function (req, res) {
 });
 
 // PUT - update user password
-app.put('/api/users/:userId', ensureAuthentication, function(req, res) {
+router.put('/:userId', ensureAuthentication, function(req, res) {
   var newPassword = req.body.password;
   var userId = req.params.userId;
   // Make sure this is the right user
@@ -57,3 +62,5 @@ app.put('/api/users/:userId', ensureAuthentication, function(req, res) {
     });
   });
 });
+
+module.exports = router;
