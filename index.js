@@ -3,14 +3,6 @@ var express = require('express');
 // initiate the app
 var app = express();
 
-// Remove after auth routes are moved
-var passport = require('./auth');
-// passport setup
-  // NOTE: Must be loaded after cookie-parser, body-parser, and session
-  app.use(passport.initialize());
-  app.use(passport.session());
-//
-
 // db connection and models
 var conn = require('./db');
 var User = conn.model('User');
@@ -45,28 +37,6 @@ function isAuthorizedToDelete(req, res, next) {
 
 // routes
 require('./router')(app);
-
-// POST - user login
-app.post('/api/auth/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
-    if (err) { 
-      res.sendStatus(500);
-    }
-    if (!user) { 
-      return res.sendStatus(403);
-    }
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      return res.send({user: user.toClient()});
-    });
-  })(req, res, next);
-});
-
-// GET - logout
-app.get('/api/auth/logout', ensureAuthentication, function(req, res) {
-  req.logout();
-  res.sendStatus(200);
-});
 
 /*
 // WHISKY ROUTES
