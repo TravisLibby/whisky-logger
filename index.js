@@ -1,14 +1,15 @@
 var express = require('express');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var bcrypt = require('bcrypt');
-var _ = require('lodash');
-
-var passport = require('./auth');
 
 // initiate the app
 var app = express();
+
+// Remove after auth routes are moved
+var passport = require('./auth');
+// passport setup
+  // NOTE: Must be loaded after cookie-parser, body-parser, and session
+  app.use(passport.initialize());
+  app.use(passport.session());
+//
 
 // db connection and models
 var conn = require('./db');
@@ -16,18 +17,7 @@ var User = conn.model('User');
 var Whisky = conn.model('Whisky');
 
 // middleware
-app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
-app.use(bodyParser.json()); // parse application/json
-app.use(cookieParser());
-app.use(session({
-  secret: 'scotchyscotch',
-  resave: false,
-  saveUninitialized: true
-}));
-
-// passport setup
-app.use(passport.initialize());
-app.use(passport.session());
+require('./middleware')(app);
 
 // ensure authentication middleware
 function ensureAuthentication(req, res, next) {
@@ -40,11 +30,11 @@ function ensureAuthentication(req, res, next) {
 // delete authorization middleware
 function isAuthorizedToDelete(req, res, next) {
   Whisky.findById(req.params.id, function(err, whisky) {
-    if (err) {
-      return res.sendStatus(500);
-    }
     if (!whisky) {
       return res.sendStatus(404);
+    }
+    if (err) {
+      return res.sendStatus(500);
     }
     if (whisky.whiskyId !== req.user.id) {
       return res.sendStatus(403);
