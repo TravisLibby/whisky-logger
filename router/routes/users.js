@@ -9,7 +9,8 @@ var ensureAuthentication = require('../../middleware/ensureAuthentication');
 
 // POST - create a user
 router.post('/', function (req, res) {
-  User.create(req.body, function (err, user) {
+  console.log(req.body.user);
+  User.create(req.body.user, function (err, user) {
     if (err) {
       if (err.code === 11000) {
         return res.sendStatus(409); // conflict
