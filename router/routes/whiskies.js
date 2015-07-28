@@ -41,7 +41,7 @@ router.get('/', ensureAuthentication, function(req, res) {
     for (var i = 0; i < whiskies.length; i++) {
       whiskies[i] = whiskies[i].toClient();
     }
-    res.send(whiskies);
+    res.send({'whiskies': whiskies});
   });
 });
 

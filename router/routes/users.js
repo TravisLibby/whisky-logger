@@ -23,7 +23,7 @@ router.post('/', function (req, res) {
       if (err) {
         return res.sendStatus(500);
       }
-      res.sendStatus(200); // ok - user created and session established
+      res.status(200).send({user: user.toClient()}); // ok - user created and session established
     });
   });  
 });
