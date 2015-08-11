@@ -15,8 +15,8 @@ router.post('/', ensureAuthentication, function(req, res) {
     if (err) {
       return res.sendStatus(500);
     }
-    res.sendStatus(200);
-  })
+    res.status(200).send({'whisky': req.body.whisky});
+  });
 });
 
 // GET - find a whisky by id
