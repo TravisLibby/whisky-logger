@@ -52,7 +52,7 @@ router.delete('/:id', ensureAuthentication, isAuthorizedToDelete, function(req, 
     if (err) {
       return res.sendStatus(500);
     }
-    res.sendStatus(200);
+    res.status(200).send({'whisky': req.body.whisky});
   });
 });
 
