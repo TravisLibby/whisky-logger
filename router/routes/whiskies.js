@@ -10,7 +10,6 @@ var isAuthorizedToDelete = require('../../middleware/isAuthorizedToDelete');
 // POST - create a whisky review
 router.post('/', ensureAuthentication, function(req, res) {
   req.body.whisky.whiskyId = req.user.id;
-  console.log(req.body.whiskyId);
   Whisky.create(req.body.whisky, function(err) {
     if (err) {
       return res.sendStatus(500);
