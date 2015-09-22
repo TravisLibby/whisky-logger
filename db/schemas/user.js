@@ -33,7 +33,7 @@ userSchema.pre('save', function(next) {
 
 userSchema.methods.toClient = function() {
   return {
-    id: this.id,
+    _id: this.id,
     username: this.username
   };
 }

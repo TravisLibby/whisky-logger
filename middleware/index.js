@@ -21,7 +21,8 @@ module.exports = function(app) {
   app.use(session({
     secret: 'scotchyscotch',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {maxAge: 86400000} // 24 hours
   }));
 
   // passport setup

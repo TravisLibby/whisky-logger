@@ -10,11 +10,12 @@ var isAuthorizedToDelete = require('../../middleware/isAuthorizedToDelete');
 // POST - create a whisky review
 router.post('/', ensureAuthentication, function(req, res) {
   req.body.whisky.whiskyId = req.user.id;
-  Whisky.create(req.body.whisky, function(err) {
+  Whisky.create(req.body.whisky, function(err, whisky) {
     if (err) {
       return res.sendStatus(500);
     }
-    res.status(200).send({'whisky': req.body.whisky});
+    console.log(whisky);
+    res.status(200).send({'whisky': whisky});
   });
 });
 
@@ -27,7 +28,7 @@ router.get('/:id', ensureAuthentication, function(req, res) {
     if (!whisky) {
       return res.sendStatus(404);
     }
-    res.send(whisky.toClient());
+    res.send({'whisky': whisky.toClient()});
   });
 });
 

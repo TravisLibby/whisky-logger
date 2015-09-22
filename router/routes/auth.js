@@ -15,7 +15,7 @@ router.post('/login', function(req, res, next) {
     }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      return res.send({users: user.toClient()});
+      res.send({users: user.toClient()});
     });
   })(req, res, next);
 });

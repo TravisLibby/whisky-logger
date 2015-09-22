@@ -27,7 +27,7 @@ var whiskySchema = new Schema({
 
 whiskySchema.methods.toClient = function() {
   return {
-    id: this.id,
+    _id: this.id,
     distiller: this.distiller,
     bottle: this.bottle,
     region: this.region,
